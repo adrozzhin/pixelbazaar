@@ -49,15 +49,19 @@ export default function CartPage() {
             if (response.ok) {
                 console.log(data)
                 router.push(data.url)
+            } else {
+                alert(data?.error || 'Checkout is disabled for this demo.')
             }
         } catch (err) {
             console.log('Error creating checkout', err.message)
+            alert('Checkout is disabled for this demo.')
         }
     }
 
     return (
         <section className="cart-section">
             <h2>Your Cart</h2>
+            <p className="demo-note"><strong>Portfolio demo:</strong> checkout uses <strong>Stripe test mode (sandbox)</strong>. No real charges are made.</p>
             {Object.keys(cart).length === 0 && (<p>You have no items in your cart!</p>)}
             <div className="cart-container">
                 {Object.keys(cart).map((item, itemIndex) => {

@@ -31,6 +31,20 @@ header {
     padding: 1.5rem 1rem;
 }
 
+.demo-banner {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0.75rem auto 0;
+    padding: 0.5rem 0.75rem;
+    background: var(--background-muted);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius-small);
+}
+
+.demo-banner p {
+    width: 100%;
+}
+
 .header-content {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -69,6 +83,14 @@ header {
 
 .mid-text {
     display: none;
+}
+
+.demo-note {
+    background: var(--background-muted);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius-small);
+    padding: 0.5rem 0.75rem;
+    width: 100%;
 }
 
 

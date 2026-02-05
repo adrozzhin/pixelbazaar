@@ -7,7 +7,7 @@ import EmailInput from "@/components/EmailInput";
 import ProductsProvider from "@/context/ProductContext";
 
 export const metadata = {
-  title: "Pixelbazaar",
+  title: "Pixelbazaar (Demo)",
   description: "A super cool store for programmers and productivity fiends!",
 };
 
@@ -26,6 +26,12 @@ export default function RootLayout({ children }) {
                 </Link>
                 <h5 className="mid-text">- Cool stuff for cool people -</h5>
                 <Cart />
+              </div>
+
+              <div className="demo-banner" role="note" aria-label="Demo disclaimer">
+                <p>
+                  <strong>Portfolio demo:</strong> not a real store. Checkout uses <strong>Stripe test mode (sandbox)</strong> and no real charges are made.
+                </p>
               </div>
             </header>
 

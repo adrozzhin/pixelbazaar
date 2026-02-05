@@ -31,6 +31,7 @@ export default function ImageBanner() {
                     <div>
                         <h3>Welcome to</h3>
                         <h1>Pixelbazaar Store</h1>
+                        <p className="demo-note"><strong>Portfolio demo:</strong> items shown are for demonstration only and are not for sale.</p>
                     </div>
                     <div>
                         <button type="button" onClick={() => scrollToSection('stickers-section')}>Shop stickers</button>
