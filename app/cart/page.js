@@ -71,7 +71,7 @@ export default function CartPage() {
                     const imgName = itemData.name === 'Medieval Dragon Month Planner' ?
                         'planner' :
                         itemData.name.replaceAll(' Sticker.png', '').replaceAll(' ', '_')
-                    const imgUrl = 'low_res/' + imgName + '.jpeg'
+                    const imgUrl = '/low_res/' + imgName + '.jpeg'
 
                     return (
                         <div key={itemIndex} className="cart-item">

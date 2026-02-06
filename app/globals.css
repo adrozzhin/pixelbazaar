@@ -274,8 +274,10 @@ main,
 }
 
 .cart-item img {
-    width: 30%;
-    height: fit-content;
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .cart-item-info {
@@ -294,6 +296,19 @@ main,
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+}
+
+@media (max-width: 640px) {
+    .cart-item {
+        flex-direction: column;
+    }
+
+    .cart-item img {
+        width: 100%;
+        height: auto;
+        max-height: 320px;
+        object-fit: contain;
+    }
 }
 
 
