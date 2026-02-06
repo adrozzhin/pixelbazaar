@@ -93,6 +93,13 @@ header {
     width: 100%;
 }
 
+/* success page: keep demo note centered under the heading */
+.page-container > .demo-note {
+    max-width: 800px;
+    margin: -1rem auto 0;
+    text-align: center;
+}
+
 
 
 /* main app */
