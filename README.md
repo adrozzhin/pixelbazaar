@@ -17,10 +17,6 @@ npm run dev
 
 ## Environment variables
 
-Server-side Stripe key (never `NEXT_PUBLIC_*`):
-
-- `STRIPE_SECRET_KEY` (use a Stripe *test* secret key, `sk_test_...`)
-
 App base URL:
 
 - `NEXT_PUBLIC_BASE_URL` (e.g. `http://localhost:3000`)

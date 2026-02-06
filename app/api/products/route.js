@@ -1,29 +1,13 @@
 import Stripe from "stripe"
 import '../../../envConfig.js'
 
-const API_KEY = process.env.STRIPE_SECRET_KEY
-const stripe = API_KEY
-    ? new Stripe(API_KEY, {
-        apiVersion: '2023-10-16'
-    })
-    : null
+const API_KEY = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY
+const stripe = new Stripe(API_KEY, {
+    apiVersion: '2023-10-16'
+})
 
 export async function GET() {
     try {
-        if (!stripe) {
-            return Response.json(
-                { error: 'Stripe is not configured on the server.' },
-                { status: 500 }
-            )
-        }
-
-        if (typeof API_KEY === 'string' && API_KEY.startsWith('sk_live')) {
-            return Response.json(
-                { error: 'Live Stripe keys are blocked for this portfolio demo. Use a test (sk_test) key.' },
-                { status: 400 }
-            )
-        }
-
         // fetch all the active products from stripe
         const products = await stripe.products.list({ active: true })
 
@@ -51,14 +35,11 @@ export async function GET() {
 
 
         // send the combined data as json
-        return Response.json(combinedData, { status: 200 })
+        return Response.json(combinedData)
 
     } catch (err) {
         console.error('Error fetching data from stripe: ', err.message)
-        return Response.json(
-            { error: 'Failed to fetch data from stripe' },
-            { status: 500 }
-        )
+        return Response.json({ error: 'Failed to fetch data from stripe' })
     }
 }
 
