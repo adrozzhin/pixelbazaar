@@ -41,14 +41,19 @@ export default function ProductsProvider(props) {
             ...cart
         }
 
-        const normalizedNum = typeof num === 'string' ? parseInt(num || '0') : num
+        // Mobile number inputs can emit intermediate values like '' while the user is editing.
+        // Treat non-finite values as "no change" instead of deleting the item.
+        const normalizedNum = typeof num === 'string' ? parseInt(num, 10) : num
+        if (!Number.isFinite(normalizedNum)) {
+            return
+        }
 
         if (price_id in cart) {
             // turns out the product is already in the cart so take the previous value and increment/decrement it
             // newCart[price_id] = newCart[price_id] + num
             newCart[price_id] = {
                 ...data,
-                quantity: noIncrement ? normalizedNum : (parseInt(newCart[price_id]?.quantity) + normalizedNum)
+                quantity: noIncrement ? normalizedNum : (parseInt(newCart[price_id]?.quantity, 10) + normalizedNum)
             }
         } else {
             // product not yet in cart, so add it

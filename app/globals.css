@@ -2,6 +2,10 @@ body {
     position: relative;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 #app {
     display: flex;
     flex-direction: column;
@@ -308,6 +312,12 @@ main,
         height: auto;
         max-height: 320px;
         object-fit: contain;
+    }
+
+    /* Prevent iOS Safari from zooming when focusing inputs (<16px font-size). */
+    .cart-item-info input,
+    .email-container div input {
+        font-size: 16px;
     }
 }
 

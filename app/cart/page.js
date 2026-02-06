@@ -3,10 +3,28 @@
 import { useProducts } from "@/context/ProductContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function CartPage() {
     const router = useRouter()
     const { cart, handleIncrementProduct } = useProducts()
+
+    // Keep quantity input editable (can be cleared) without immediately mutating cart state.
+    // We commit on blur/Enter to avoid mobile number-input quirks.
+    const [quantityDrafts, setQuantityDrafts] = useState({})
+
+    useEffect(() => {
+        // Drop drafts for items no longer in cart
+        setQuantityDrafts((prev) => {
+            const next = { ...prev }
+            Object.keys(next).forEach((priceId) => {
+                if (!(priceId in cart)) {
+                    delete next[priceId]
+                }
+            })
+            return next
+        })
+    }, [cart])
 
     // Challenge item - calculate the total cost of items in cart
     const total = Object.keys(cart).reduce((acc, curr) => {
@@ -67,6 +85,7 @@ export default function CartPage() {
                 {Object.keys(cart).map((item, itemIndex) => {
                     const itemData = cart[item]
                     const itemQuantity = itemData?.quantity
+                    const draftValue = quantityDrafts?.[item]
 
                     const imgName = itemData.name === 'Medieval Dragon Month Planner' ?
                         'planner' :
@@ -82,12 +101,56 @@ export default function CartPage() {
                                 <h4>${itemData.prices[0].unit_amount / 100}</h4>
                                 <div className="quantity-container">
                                     <p><strong>Quantity</strong></p>
-                                    <input type="number" value={itemQuantity} placeholder="2" onChange={(e) => {
-                                        const newValue = e.target.value
+                                    <input
+                                        type="number"
+                                        inputMode="numeric"
+                                        min="0"
+                                        step="1"
+                                        value={draftValue ?? itemQuantity}
+                                        placeholder="2"
+                                        onChange={(e) => {
+                                            const raw = e.target.value
+                                            setQuantityDrafts((prev) => ({
+                                                ...prev,
+                                                [item]: raw,
+                                            }))
+                                        }}
+                                        onBlur={(e) => {
+                                            const raw = e.target.value
+                                            if (raw === '') {
+                                                // Revert empty input back to the actual cart value
+                                                setQuantityDrafts((prev) => {
+                                                    const next = { ...prev }
+                                                    delete next[item]
+                                                    return next
+                                                })
+                                                return
+                                            }
 
+                                            const nextQuantity = parseInt(raw, 10)
+                                            if (!Number.isFinite(nextQuantity)) {
+                                                setQuantityDrafts((prev) => {
+                                                    const next = { ...prev }
+                                                    delete next[item]
+                                                    return next
+                                                })
+                                                return
+                                            }
 
-                                        handleIncrementProduct(itemData.default_price, newValue, itemData, true)
-                                    }} />
+                                            const clamped = Math.max(0, nextQuantity)
+                                            handleIncrementProduct(itemData.default_price, clamped, itemData, true)
+                                            setQuantityDrafts((prev) => {
+                                                const next = { ...prev }
+                                                delete next[item]
+                                                return next
+                                            })
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.currentTarget.blur()
+                                            }
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>
