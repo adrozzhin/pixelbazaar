@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
               <div className="links-container">
                 <div>
                   <h3>Andrei Drozzhin</h3>
-                  <Link target="_blank" href={'/'}>Portfolio</Link>
+                  <Link target="_blank" href={'https://andreidrozzhin-portfolio.netlify.app/'}>Portfolio</Link>
                 </div>
                 <div>
                   <h3>Store</h3>

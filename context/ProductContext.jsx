@@ -1,30 +1,60 @@
 'use client'
 
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
 const ProductContext = createContext()
+
+const CART_STORAGE_KEY = 'pixelbazaar_cart'
 
 export default function ProductsProvider(props) {
     const { children } = props
 
+    // Important: do NOT read localStorage during initial render.
+    // If you do, server HTML (empty cart) won't match client HTML (persisted cart), causing hydration errors.
     const [cart, setCart] = useState({})
+    const [hasHydratedCart, setHasHydratedCart] = useState(false)
+
+    useEffect(() => {
+        if (!window?.localStorage) return
+        try {
+            const raw = window.localStorage.getItem(CART_STORAGE_KEY)
+            setCart(raw ? JSON.parse(raw) : {})
+        } catch {
+            setCart({})
+        } finally {
+            setHasHydratedCart(true)
+        }
+    }, [])
+
+    function persistCart(nextCart) {
+        if (typeof window === 'undefined') return
+        if (!window.localStorage) return
+        try {
+            window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(nextCart))
+        } catch {
+            // ignore storage failures (private browsing, quota, etc.)
+        }
+    }
 
     function handleIncrementProduct(price_id, num, data, noIncrement = false) {
         const newCart = {
             ...cart
         }
+
+        const normalizedNum = typeof num === 'string' ? parseInt(num || '0') : num
+
         if (price_id in cart) {
             // turns out the product is already in the cart so take the previous value and increment/decrement it
             // newCart[price_id] = newCart[price_id] + num
             newCart[price_id] = {
                 ...data,
-                quantity: noIncrement ? num : newCart[price_id]?.quantity + num
+                quantity: noIncrement ? normalizedNum : (parseInt(newCart[price_id]?.quantity) + normalizedNum)
             }
         } else {
             // product not yet in cart, so add it
             newCart[price_id] = {
                 ...data,
-                quantity: num
+                quantity: normalizedNum
             }
         }
 
@@ -35,11 +65,13 @@ export default function ProductsProvider(props) {
 
         // overwrite the cart state with the newCart object
         setCart(newCart)
+        persistCart(newCart)
 
     }
 
     const value = {
         cart,
+        hasHydratedCart,
         handleIncrementProduct,
     }
 
