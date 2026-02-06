@@ -6,8 +6,12 @@ export async function getProducts() {
 
         const baseURL = process.env.NEXT_PUBLIC_BASE_URL
         const response = await fetch(baseURL + '/api/products')
+        if (!response.ok) {
+            return []
+        }
+
         const products = await response.json()
-        return products
+        return Array.isArray(products) ? products : []
     } catch (err) {
         console.log(err.stack)
         console.log(err.message)

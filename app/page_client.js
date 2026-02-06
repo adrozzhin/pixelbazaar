@@ -34,7 +34,7 @@ export default function Home(props) {
         const baseURL = process.env.NEXT_PUBLIC_BASE_URL
         const response = await fetch(baseURL + '/api/products')
         const productsData = await response.json()
-        setProducts(productsData)
+        setProducts(Array.isArray(productsData) ? productsData : [])
       } catch (err) {
         console.log(err.message)
       }
